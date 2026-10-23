@@ -136,4 +136,4 @@ Utilizar somente em aplicações próprias, laboratórios ou ambientes para os q
 ## 7. Referências
 
 - Documentação e código-fonte: https://github.com/OJ/gobuster
-- Laboratório: TryHackMe — registrar aqui o nome da sala e a tarefa estudada.
+- Laboratório: TryHackMe
