@@ -154,4 +154,4 @@ Esses controles devem ser avaliados em conjunto. Bloquear contas indiscriminadam
 ## 8. Referências
 
 - Código-fonte e documentação: https://github.com/vanhauser-thc/thc-hydra
-- Laboratório: TryHackMe — registrar o nome da sala e da tarefa estudada.
+- Laboratório: TryHackMe
