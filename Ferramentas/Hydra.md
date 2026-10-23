@@ -1,157 +1,70 @@
 # Hydra
 
-## 1. Visão geral
+> Ferramenta de auditoria de credenciais que automatiza testes de autenticação em serviços compatíveis.
 
-**Categoria:** Auditoria de credenciais e autenticação  
-**Interface:** Linha de comando (CLI)  
-**Principal utilização:** Testar a resistência de mecanismos de autenticação a tentativas de senhas comuns ou previsíveis.
+## 1. Comando do laboratório
 
-### Para que serve?
-
-O Hydra é uma ferramenta que automatiza tentativas de autenticação em serviços e protocolos compatíveis. Ele permite testar combinações de usuários e senhas a partir de listas de credenciais.
-
-Entre suas aplicações estão:
-
-- Auditoria de senhas fracas.
-- Avaliação de mecanismos de autenticação.
-- Testes autorizados de resistência a ataques de dicionário.
-- Validação de controles como bloqueio de conta e limitação de tentativas.
-
-**Importante:** o Hydra não descobre necessariamente uma senha por conta própria. Ele testa as credenciais fornecidas e identifica respostas que correspondam aos critérios de sucesso ou falha configurados.
-
-## 2. Como funciona?
-
-O Hydra recebe os dados do alvo, o método de autenticação e uma lista de credenciais. Em seguida, realiza tentativas e analisa as respostas do serviço.
-
-Fluxo simplificado:
-
-```text
-Usuário + Lista de senhas
-           |
-           v
-         Hydra
-           |
-           v
- Tentativas de autenticação
-           |
-           v
- Serviço de autenticação
-           |
-           v
- Análise das respostas
-           |
-           v
- Credenciais válidas ou
- resultado inconclusivo
-```
-
-### Ataque de dicionário
-
-Um ataque de dicionário utiliza uma lista predefinida de senhas prováveis, em vez de testar todas as combinações possíveis.
-
-Exemplo de uma lista de laboratório:
-
-```text
-abc123
-123456
-password
-qwerty
-654321
-```
-
-A ferramenta testa as entradas conforme os parâmetros definidos.
-
-A eficácia depende da qualidade da lista, das características do serviço e dos controles de segurança existentes.
-
-## 3. Comando utilizado no laboratório
-
-O TryHackMe apresenta o seguinte comando para testar o formulário de login da aplicação de laboratório:
+Exemplo utilizado no TryHackMe para testar um formulário de login HTTP em um ambiente autorizado:
 
 ```bash
 hydra -l admin -P passlist.txt www.onlineshop.thm http-post-form "/login:username=^USER^&password=^PASS^:F=incorrect" -V
 ```
 
-Utilize esse comando somente no laboratório autorizado para o qual foi fornecido.
-
-### Entendendo os parâmetros
+**Parâmetros do comando:**
 
 | Parâmetro | Função |
 |---|---|
-| `hydra` | Executa a ferramenta. |
-| `-l admin` | Define um único nome de usuário para as tentativas. |
-| `-P passlist.txt` | Informa o arquivo que contém a lista de senhas. |
-| `www.onlineshop.thm` | Define o host de destino. |
-| `http-post-form` | Seleciona o módulo para testar um formulário de autenticação HTTP enviado por POST. |
-| `/login` | Indica o caminho do formulário de login. |
-| `username=^USER^` | Marca o campo em que a ferramenta insere o nome de usuário. |
-| `password=^PASS^` | Marca o campo em que a ferramenta insere a senha testada. |
-| `F=incorrect` | Define o texto que indica uma falha de autenticação na resposta. |
-| `-V` | Exibe informações detalhadas sobre as tentativas. |
+| `-l admin` | Define um único usuário. |
+| `-L users.txt` | Define uma lista de usuários. |
+| `-p senha` | Define uma única senha. |
+| `-P passlist.txt` | Define uma lista de senhas. |
+| `-t 4` | Define quatro tarefas paralelas. |
+| `-s 8080` | Define a porta do serviço. |
+| `-o resultado.txt` | Salva os resultados em um arquivo. |
+| `-V` | Exibe cada tentativa realizada. |
+| `-v` | Ativa a saída detalhada. |
+| `-f` | Interrompe após encontrar a primeira combinação válida no alvo. |
+| `-h` | Exibe a ajuda da ferramenta. |
 
-### Entendendo a estrutura do formulário
+## 2. Formulários web
 
-A parte do comando referente ao formulário segue, de forma simplificada, esta estrutura:
+O módulo `http-post-form` permite testar formulários de autenticação que enviam dados por HTTP POST.
+
+Estrutura simplificada:
 
 ```text
-/caminho:campos_enviados:indicador_de_falha
+"/caminho:campos_do_formulario:critério_de_falha"
 ```
 
-No exemplo:
+No exemplo do laboratório:
 
-- `/login` representa o caminho acessado.
-- `username` e `password` são os nomes dos campos enviados ao servidor.
-- `^USER^` e `^PASS^` são marcadores substituídos pelos valores testados.
-- `F=incorrect` indica que a resposta contendo `incorrect` é interpretada como falha.
+- `/login`: caminho da página de autenticação.
+- `username=^USER^`: campo destinado ao usuário.
+- `password=^PASS^`: campo destinado à senha.
+- `F=incorrect`: identifica a mensagem que indica falha de autenticação.
 
-Esse último ponto é fundamental: o critério precisa corresponder ao comportamento real da aplicação. Se o servidor utilizar outra mensagem de erro, redirecionamentos ou respostas inconsistentes, o resultado poderá ser interpretado incorretamente.
+O caminho, os nomes dos campos e o critério de falha precisam corresponder ao comportamento real da aplicação.
 
-## 4. Interpretando os resultados
+## 3. Como interpretar os resultados
 
-Ao executar o comando, a Hydra apresenta informações sobre as tentativas realizadas e pode indicar credenciais que correspondem aos critérios configurados.
+- **Credencial identificada:** a ferramenta encontrou uma combinação que corresponde aos critérios configurados.
+- **Nenhuma credencial encontrada:** nenhuma combinação foi identificada como válida durante o teste.
+- **Erro de conexão:** verifique conectividade, resolução DNS, porta e disponibilidade do serviço.
+- **Resultados inconsistentes:** confira o critério de falha, os campos do formulário e as respostas HTTP.
 
-Na análise, observe:
+Uma credencial indicada pela ferramenta deve ser validada no ambiente autorizado. Uma mensagem de resposta mal interpretada pode gerar falsos positivos.
 
-- Se o usuário testado corresponde ao esperado.
-- Se o resultado foi identificado como uma tentativa bem-sucedida.
-- Se a aplicação realmente permite autenticação com a credencial identificada.
-- Se existem bloqueios, limitação de tentativas ou respostas inconsistentes.
+## 4. Como continuar
 
-**Uma resposta identificada pela ferramenta não deve ser considerada prova definitiva sem validação.** O critério configurado pode gerar falsos positivos caso a aplicação responda de maneira inesperada.
+1. Valide o resultado de autenticação no laboratório.
+2. Verifique quais recursos ficam acessíveis após o login.
+3. Avalie os controles de segurança, como MFA, limitação de tentativas e bloqueio temporário.
+4. Em uma análise defensiva, procure falhas de autenticação repetidas nos logs e investigue padrões suspeitos.
+5. Registre o resultado, o impacto e as medidas corretivas pertinentes.
 
-## 5. Diferença entre Hydra e Gobuster
+## 5. Referências
 
-| Característica | Hydra | Gobuster |
-|---|---|---|
-| Objetivo principal | Auditar autenticação e credenciais | Enumerar caminhos e arquivos web |
-| Entrada típica | Usuários e listas de senhas | Wordlist de caminhos |
-| O que testa | Tentativas de autenticação | Requisições para caminhos possíveis |
-| Resultado esperado | Indícios de credenciais válidas | Caminhos e recursos que merecem análise |
+- [Documentação oficial do Hydra](https://github.com/vanhauser-thc/thc-hydra)
+- [Sala Hydra — TryHackMe](https://tryhackme.com/room/hydra)
 
-As ferramentas podem contribuir para etapas diferentes de uma avaliação de segurança. A descoberta de um caminho de login com o Gobuster, por exemplo, pode motivar uma avaliação autorizada dos controles de autenticação com o Hydra.
-
-## 6. Controles defensivos relacionados
-
-Para reduzir o risco de tentativas automatizadas de senha, considere avaliar:
-
-- Limitação da frequência de tentativas.
-- Bloqueio temporário ou controles adaptativos após falhas repetidas.
-- MFA (autenticação multifator).
-- Monitoramento de falhas de autenticação.
-- Alertas para padrões anormais de login.
-- Políticas de senhas e proteção contra senhas comuns.
-- Proteção contra automação abusiva, quando aplicável.
-
-Esses controles devem ser avaliados em conjunto. Bloquear contas indiscriminadamente, por exemplo, pode permitir ataques de negação de serviço contra usuários legítimos.
-
-## 7. Cuidados e limitações
-
-- Execute testes apenas em sistemas próprios, laboratórios ou ambientes com autorização explícita.
-- Tentativas automatizadas podem gerar alertas, bloqueios e impacto operacional.
-- O sucesso depende da configuração correta do módulo e dos critérios de resposta.
-- A ausência de credenciais identificadas não comprova que o mecanismo de autenticação seja seguro.
-- A ferramenta não substitui a avaliação dos controles de autenticação nem a análise de logs.
-
-## 8. Referências
-
-- Código-fonte e documentação: https://github.com/vanhauser-thc/thc-hydra
-- Laboratório: TryHackMe
+**Uso autorizado:** execute testes somente em laboratórios, sistemas próprios ou ambientes com permissão explícita.
