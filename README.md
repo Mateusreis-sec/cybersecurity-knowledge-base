@@ -1,48 +1,29 @@
-# Base de Conhecimento em Cibersegurança
+# Cybersecurity Knowledge Base
 
-Repositório pessoal dedicado ao estudo, à documentação e à prática de conceitos, ferramentas e técnicas de cibersegurança.
+Personal knowledge base dedicated to learning, documenting and practicing cybersecurity concepts and tools.
 
-O objetivo é construir uma base de conhecimento técnico para consulta futura, reunindo comandos, exemplos práticos, fundamentos de redes, ferramentas de segurança e aprendizados obtidos em laboratórios.
+This repository serves as a technical reference for hands-on labs, command-line tools, networking fundamentals, threat hunting and defensive security.
 
-## 📚 Conteúdo
+## Contents
 
-| Categoria | Descrição |
+| Section | Description |
 |---|---|
-| [Ferramentas](Ferramentas/) | Documentação de ferramentas, comandos, parâmetros e exemplos de utilização. |
-| [Laboratórios](Laboratorios/) | Anotações de exercícios práticos, resultados e aprendizados. |
-| [Redes](Networking/) | Protocolos, modelos OSI e TCP/IP, endereçamento e fundamentos de redes. |
-| [Threat Hunting](Threat-Hunting/) | Técnicas de investigação, análise de eventos e busca por atividades suspeitas. |
-| [Conceitos](Conceitos/) | Conceitos técnicos, resumos e fundamentos de cibersegurança. |
+| [Tools](Ferramentas/) | Tool documentation, commands, parameters and practical usage |
+| [Labs](Laboratorios/) | Hands-on exercises, findings and lessons learned |
+| [Networking](Networking/) | Network protocols, OSI and TCP/IP models, and network fundamentals |
+| [Threat Hunting](Threat-Hunting/) | Event investigation, detection logic and hunting techniques |
+| [Concepts](Conceitos/) | Cybersecurity concepts and technical notes |
 
-## 🎯 Objetivos
+## Learning approach
 
-- Consolidar conhecimentos teóricos por meio da prática.
-- Documentar ferramentas e comandos para consulta rápida.
-- Compreender o funcionamento das tecnologias de segurança.
-- Desenvolver habilidades de investigação e análise de eventos.
-- Registrar aprendizados de plataformas como TryHackMe e de outros laboratórios.
-- Construir uma referência técnica que evolua continuamente com meus estudos.
+The documentation focuses on understanding how tools work, when to use them, how to interpret their output and how to apply the knowledge in authorized environments.
 
-## 🛠️ Organização da documentação
+Topics are documented progressively through practical exercises, personal notes and official references.
 
-Sempre que aplicável, a documentação das ferramentas incluirá:
+## Scope and ethics
 
-- Finalidade e principais aplicações.
-- Funcionamento e conceitos fundamentais.
-- Sintaxe dos comandos e explicação dos parâmetros.
-- Exemplos práticos de utilização.
-- Interpretação dos resultados e limitações.
-- Referências oficiais e materiais complementares.
-- Aplicações defensivas e possibilidades de detecção.
+All practical testing is intended for authorized labs, systems owned by me, or environments where explicit permission has been granted.
 
-## 🔐 Ética e responsabilidade
+## Status
 
-Os testes práticos são realizados exclusivamente em laboratórios, sistemas próprios ou ambientes para os quais exista autorização explícita.
-
-O conhecimento documentado tem como objetivo promover o aprendizado, a avaliação responsável da segurança e o aprimoramento das habilidades técnicas.
-
-## 📈 Evolução contínua
-
-Este repositório está em constante desenvolvimento e será atualizado conforme novos conceitos forem estudados, ferramentas forem exploradas e laboratórios forem concluídos.
-
-O foco é compreender não apenas como utilizar uma ferramenta, mas também **como ela funciona, quando utilizá-la e como interpretar seus resultados**.
+This repository is continuously evolving as I develop my cybersecurity knowledge and practical skills.
