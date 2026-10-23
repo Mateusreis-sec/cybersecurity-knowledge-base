@@ -1,70 +1,88 @@
 # Hydra
 
-> Ferramenta de auditoria de credenciais que automatiza testes de autenticação em serviços compatíveis.
+> Ferramenta de auditoria de credenciais que automatiza testes de autenticação em diversos serviços e protocolos.
 
-## 1. Comando do laboratório
-
-Exemplo utilizado no TryHackMe para testar um formulário de login HTTP em um ambiente autorizado:
+## 1. Sintaxe básica
 
 ```bash
-hydra -l admin -P passlist.txt www.onlineshop.thm http-post-form "/login:username=^USER^&password=^PASS^:F=incorrect" -V
+hydra [opções] IP_OU_HOST serviço
 ```
 
-**Parâmetros do comando:**
+Exemplo genérico:
+
+```bash
+hydra -l usuario -P senhas.txt IP_OU_HOST ssh
+```
+
+**Elementos do comando:**
+- `-l`: usuário único.
+- `-L`: arquivo com lista de usuários.
+- `-p`: senha única.
+- `-P`: arquivo com lista de senhas.
+- `IP_OU_HOST`: endereço do alvo autorizado.
+- `serviço`: protocolo ou serviço a testar, como `ssh`, `ftp` ou `http-post-form`.
+
+## 2. Parâmetros úteis
 
 | Parâmetro | Função |
 |---|---|
-| `-l admin` | Define um único usuário. |
-| `-L users.txt` | Define uma lista de usuários. |
-| `-p senha` | Define uma única senha. |
-| `-P passlist.txt` | Define uma lista de senhas. |
-| `-t 4` | Define quatro tarefas paralelas. |
-| `-s 8080` | Define a porta do serviço. |
-| `-o resultado.txt` | Salva os resultados em um arquivo. |
-| `-V` | Exibe cada tentativa realizada. |
-| `-v` | Ativa a saída detalhada. |
-| `-f` | Interrompe após encontrar a primeira combinação válida no alvo. |
-| `-h` | Exibe a ajuda da ferramenta. |
+| `-t 4` | Define 4 tarefas paralelas |
+| `-s 2222` | Define uma porta específica |
+| `-o resultado.txt` | Salva os resultados em arquivo |
+| `-V` | Exibe cada tentativa |
+| `-v` | Ativa mensagens detalhadas |
+| `-f` | Para após encontrar uma combinação válida para o alvo |
+| `-h` | Exibe a ajuda |
 
-## 2. Formulários web
+## 3. Exemplos por serviço
 
-O módulo `http-post-form` permite testar formulários de autenticação que enviam dados por HTTP POST.
+### SSH
 
-Estrutura simplificada:
-
-```text
-"/caminho:campos_do_formulario:critério_de_falha"
+```bash
+hydra -l usuario -P senhas.txt IP_OU_HOST ssh
 ```
 
-No exemplo do laboratório:
+Testa combinações de senha para um usuário em um serviço SSH acessível.
 
-- `/login`: caminho da página de autenticação.
-- `username=^USER^`: campo destinado ao usuário.
-- `password=^PASS^`: campo destinado à senha.
-- `F=incorrect`: identifica a mensagem que indica falha de autenticação.
+### FTP
 
-O caminho, os nomes dos campos e o critério de falha precisam corresponder ao comportamento real da aplicação.
+```bash
+hydra -l usuario -P senhas.txt IP_OU_HOST ftp
+```
 
-## 3. Como interpretar os resultados
+Testa combinações de senha para autenticação FTP.
 
-- **Credencial identificada:** a ferramenta encontrou uma combinação que corresponde aos critérios configurados.
-- **Nenhuma credencial encontrada:** nenhuma combinação foi identificada como válida durante o teste.
-- **Erro de conexão:** verifique conectividade, resolução DNS, porta e disponibilidade do serviço.
-- **Resultados inconsistentes:** confira o critério de falha, os campos do formulário e as respostas HTTP.
+### Formulário web — HTTP POST
 
-Uma credencial indicada pela ferramenta deve ser validada no ambiente autorizado. Uma mensagem de resposta mal interpretada pode gerar falsos positivos.
+```bash
+hydra -l usuario -P senhas.txt IP_OU_HOST http-post-form "/login:username=^USER^&password=^PASS^:F=incorrect"
+```
 
-## 4. Como continuar
+- `/login`: caminho que recebe os dados do formulário.
+- `username=^USER^`: campo de usuário.
+- `password=^PASS^`: campo de senha.
+- `F=incorrect`: texto que indica falha de autenticação.
 
-1. Valide o resultado de autenticação no laboratório.
-2. Verifique quais recursos ficam acessíveis após o login.
-3. Avalie os controles de segurança, como MFA, limitação de tentativas e bloqueio temporário.
-4. Em uma análise defensiva, procure falhas de autenticação repetidas nos logs e investigue padrões suspeitos.
-5. Registre o resultado, o impacto e as medidas corretivas pertinentes.
+**Atenção:** o caminho, os nomes dos campos e o critério de falha precisam corresponder ao funcionamento real da aplicação.
 
-## 5. Referências
+## 4. Como interpretar os resultados
 
-- [Documentação oficial do Hydra](https://github.com/vanhauser-thc/thc-hydra)
-- [Sala Hydra — TryHackMe](https://tryhackme.com/room/hydra)
+- **Credencial encontrada:** valide o resultado no contexto autorizado e registre a evidência.
+- **Nenhuma credencial encontrada:** não significa que a senha correta esteja ausente de todas as listas.
+- **Erro de conexão:** confira IP, porta, serviço ativo e conectividade.
+- **Resultado inconsistente:** revise a resposta do serviço e os critérios de sucesso ou falha configurados.
 
-**Uso autorizado:** execute testes somente em laboratórios, sistemas próprios ou ambientes com permissão explícita.
+## 5. Como continuar
+
+1. Identifique o serviço e a porta em uso.
+2. Consulte a sintaxe específica desse serviço.
+3. Verifique se o serviço está acessível e permite autenticação.
+4. Registre o resultado e as evidências.
+5. Em uma análise defensiva, avalie logs de autenticação, tentativas repetidas, bloqueios e mecanismos de limitação de tentativas.
+
+## 6. Referências
+
+- [Repositório oficial do Hydra](https://github.com/vanhauser-thc/thc-hydra)
+- [TryHackMe — Hydra](https://tryhackme.com/room/hydra)
+
+> Utilize a ferramenta somente em laboratórios ou sistemas para os quais você tenha autorização explícita.
